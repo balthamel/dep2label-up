@@ -117,6 +117,12 @@ def evaluate_dependencies(gold, path_output):
 
 
     """
+    '''
+    with open(path_output, "r") as f:
+        lins = f.read()
+    with open("dev.conllu", 'w') as f:
+        f.write(lins)
+    '''
     output = sp.check_output(
         "perl dep2label/eval_dep/eval-spmrl.pl -p -q -g " + gold + " -s " + path_output, shell=True)
 
