@@ -81,7 +81,8 @@ def encode_3(gold_sentence, task):
                     label = str(
                         "+" + repr(relative_position_head) + "{}" + info_of_a_word[5] + "{}" + postag_head)
                 full_label = str(
-                    info_of_a_word[1] + "\t" + info_of_a_word[3] + "\t" + label)
+                    info_of_a_word[1] + "\t" + info_of_a_word[3] + "\t" + info_of_a_word[6]
+                    + "\t" + info_of_a_word[7] + "\t" + label)
 
                 words_with_labels.update({index_of_word: full_label})
 
@@ -105,7 +106,8 @@ def encode_3(gold_sentence, task):
                     label = str(
                         "-" + repr(relative_position_head) + "{}" + info_of_a_word[5] + "{}" + postag_head)
                 full_label = str(
-                    info_of_a_word[1] + "\t" + info_of_a_word[3] + "\t" + label)
+                    info_of_a_word[1] + "\t" + info_of_a_word[3] + "\t" + info_of_a_word[6]
+                    + "\t" + info_of_a_word[7] + "\t" + label)
 
                 words_with_labels.update({index_of_word: full_label})
 
@@ -232,6 +234,7 @@ def encode_4(gold_sentence, task):
 
 def tag_BOS(task, words_with_labels):
     bos = "-BOS-"
+    neg = "-10.0"
     if task == "single":
         label = str(bos)
     elif task == "combined":
@@ -240,12 +243,13 @@ def tag_BOS(task, words_with_labels):
     else:
         label = str(
             bos + "{}" + bos + "{}" + bos)
-    full_label = str(bos + "\t" + bos + "\t" + label)
+    full_label = str(bos + "\t" + bos + "\t" + neg + "\t" + neg + "\t" + label)
     words_with_labels.update({0: full_label})
 
 
 def tag_EOS(task, words_with_labels):
     eos = "-EOS-"
+    neg = "-100.0"
     if task == "single":
         label = str(eos)
     elif task == "combined":
@@ -255,5 +259,5 @@ def tag_EOS(task, words_with_labels):
         label = str(
             eos + "{}" + eos + "{}" + eos)
 
-    full_label = str(eos + "\t" + eos + "\t" + label)
+    full_label = str(eos + "\t" + eos + "\t" + neg + "\t" + neg + "\t" + label)
     words_with_labels.update({len(words_with_labels) + 1: full_label})

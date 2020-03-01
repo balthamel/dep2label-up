@@ -155,7 +155,7 @@ class Data:
         print("     Test  instance number: %s" % (len(self.test_texts)))
         print("     Raw   instance number: %s" % (len(self.raw_texts)))
         print("     FEATURE num: %s" % (self.feature_num))
-        for idx in range(self.feature_num):
+        for idx in range(len(self.feature_alphabets)):
             print("         Fe: %s  alphabet  size: %s" % (
             self.feature_alphabets[idx].name, self.feature_alphabet_sizes[idx]))
             print(
@@ -207,22 +207,26 @@ class Data:
         if total_column > 2:
             for idx in range(1, total_column - 1):
                 feature_prefix = items[idx].split(']', 1)[0] + "]"
-                self.feature_alphabets.append(Alphabet(feature_prefix))
+                if not is_number(items[idx]):
+                    self.feature_alphabets.append(Alphabet(feature_prefix))
                 self.feature_name.append(feature_prefix)
                 print("Find feature: ", feature_prefix)
-        self.feature_num = len(self.feature_alphabets)
-        self.pretrain_feature_embeddings = [None] * self.feature_num
-        self.feature_emb_dims = [20] * self.feature_num
-        self.feature_emb_dirs = [None] * self.feature_num
-        self.norm_feature_embs = [False] * self.feature_num
-        self.feature_alphabet_sizes = [0] * self.feature_num
+        self.feature_num = len(self.feature_name)
+        size = len(self.feature_alphabets)
+        self.pretrain_feature_embeddings = [None] * size
+        self.feature_emb_dims = [20] * size
+        self.feature_emb_dirs = [None] * size
+        self.norm_feature_embs = [False] * size
+        self.feature_alphabet_sizes = [0] * size
         if self.feat_config:
-            for idx in range(self.feature_num):
+            for idx in range(size):
                 if self.feature_name[idx] in self.feat_config:
                     self.feature_emb_dims[idx] = self.feat_config[self.feature_name[idx]]['emb_size']
                     self.feature_emb_dirs[idx] = self.feat_config[self.feature_name[idx]]['emb_dir']
                     self.norm_feature_embs[idx] = self.feat_config[self.feature_name[idx]]['emb_norm']
         # exit(0)
+
+
 
     def build_alphabet(self, input_file):
 
@@ -245,7 +249,7 @@ class Data:
                     label = pairs[-1]
                     self.label_alphabet.add(label)
                     ## build feature alphabet
-                    for idx in range(self.feature_num):
+                    for idx in range(len(self.feature_alphabets)):
                         feat_idx = pairs[idx + 1].split(']', 1)[-1]
                         self.feature_alphabets[idx].add(feat_idx)
 
@@ -272,7 +276,7 @@ class Data:
 
                     self.word_alphabet.add(word)
                     ## build feature alphabet
-                    for idx in range(self.feature_num):
+                    for idx in range(len(self.feature_alphabets)):
                         feat_idx = pairs[idx + 1].split(']', 1)[-1]
                         self.feature_alphabets[idx].add(feat_idx)
                     for char in word:
@@ -282,7 +286,7 @@ class Data:
         # self.label_alphabet_size = self.label_alphabet.size()
         for idtask in self.label_alphabet:
             self.label_alphabet_sizes[idtask] = self.label_alphabet[idtask].size()
-        for idx in range(self.feature_num):
+        for idx in range(len(self.feature_alphabets)):
             self.feature_alphabet_sizes[idx] = self.feature_alphabets[idx].size()
         for idtask in self.label_alphabet:
             startS = False
@@ -308,7 +312,7 @@ class Data:
             self.label_alphabet[idtask].close()
 
         # self.label_alphabet.close()
-        for idx in range(self.feature_num):
+        for idx in range(len(self.feature_alphabets)):
             self.feature_alphabets[idx].close()
 
     def build_pretrain_emb(self):
@@ -324,7 +328,7 @@ class Data:
                                                                                        self.char_alphabet,
                                                                                        self.char_emb_dim,
                                                                                        self.norm_char_emb)
-        for idx in range(self.feature_num):
+        for idx in range(len(self.feature_alphabets)):
             if self.feature_emb_dirs[idx]:
                 print("Load pretrained feature %s embedding:, norm: %s, dir: %s" % (
                 self.feature_name[idx], self.norm_feature_embs[idx], self.feature_emb_dirs[idx]))
@@ -338,22 +342,22 @@ class Data:
             self.train_texts, self.train_Ids = read_instance(self.train_dir, self.word_alphabet, self.char_alphabet,
                                                              self.feature_alphabets, self.label_alphabet,
                                                              self.number_normalized, self.MAX_SENTENCE_LENGTH,
-                                                             self.sentence_classification, self.split_token)
+                                                             self.sentence_classification, self.split_token, feature_num=len(self.feature_name))
         elif name == "dev":
             self.dev_texts, self.dev_Ids = read_instance(self.dev_dir, self.word_alphabet, self.char_alphabet,
                                                          self.feature_alphabets, self.label_alphabet,
                                                          self.number_normalized, self.MAX_SENTENCE_LENGTH,
-                                                         self.sentence_classification, self.split_token)
+                                                         self.sentence_classification, self.split_token, feature_num=len(self.feature_name))
         elif name == "test":
             self.test_texts, self.test_Ids = read_instance(self.test_dir, self.word_alphabet, self.char_alphabet,
                                                            self.feature_alphabets, self.label_alphabet,
                                                            self.number_normalized, self.MAX_SENTENCE_LENGTH,
-                                                           self.sentence_classification, self.split_token)
+                                                           self.sentence_classification, self.split_token, feature_num=len(self.feature_name))
         elif name == "raw":
             self.raw_texts, self.raw_Ids = read_instance(self.raw_dir, self.word_alphabet, self.char_alphabet,
                                                          self.feature_alphabets, self.label_alphabet,
                                                          self.number_normalized, self.MAX_SENTENCE_LENGTH,
-                                                         self.sentence_classification, self.split_token)
+                                                         self.sentence_classification, self.split_token, feature_num=len(self.feature_name))
         else:
             print("Error: you can only generate train/dev/test instance! Illegal input:%s" % (name))
 

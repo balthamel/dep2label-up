@@ -58,10 +58,10 @@ class WordRep(nn.Module):
         self.feature_num = data.feature_num
         self.feature_embedding_dims = data.feature_emb_dims
         self.feature_embeddings = nn.ModuleList()
-        for idx in range(self.feature_num):
+        for idx in range(len(data.feature_alphabets)):
             self.feature_embeddings.append(
                 nn.Embedding(data.feature_alphabets[idx].size(), self.feature_embedding_dims[idx]))
-        for idx in range(self.feature_num):
+        for idx in range(len(data.feature_alphabets)):
             if data.pretrain_feature_embeddings[idx] is not None:
                 self.feature_embeddings[idx].weight.data.copy_(torch.from_numpy(data.pretrain_feature_embeddings[idx]))
             else:
@@ -71,7 +71,7 @@ class WordRep(nn.Module):
         if self.gpu:
             self.drop = self.drop.cuda()
             self.word_embedding = self.word_embedding.cuda()
-            for idx in range(self.feature_num):
+            for idx in range(len(data.feature_alphabets)):
                 self.feature_embeddings[idx] = self.feature_embeddings[idx].cuda()
 
     def random_embedding(self, vocab_size, embedding_dim):
@@ -101,7 +101,11 @@ class WordRep(nn.Module):
         word_list = [word_embs]
         if not self.sentence_classification:
             for idx in range(self.feature_num):
-                word_list.append(self.feature_embeddings[idx](feature_inputs[idx]))
+                if idx > 0:
+                    word_list.append(feature_inputs[idx].unsqueeze(2))
+                else:
+                    word_list.append(self.feature_embeddings[idx](feature_inputs[idx]))
+
         if self.use_char:
             ## calculate char lstm last hidden
             # print("charinput:", char_inputs)

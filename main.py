@@ -330,12 +330,21 @@ def batchify_sequence_labeling_with_label(input_batch_list, gpu, inference, if_t
 
     feature_seq_tensors = []
     for idx in range(feature_num):
-        feature_seq_tensors.append(
+        if idx > 0:
+            feature_seq_tensors.append(
 
-            torch.zeros(
-                (batch_size,
-                 max_seq_len),
-                requires_grad=if_train).long())
+                torch.zeros(
+                    (batch_size,
+                     max_seq_len),
+                    requires_grad=if_train).float())
+        else:
+            feature_seq_tensors.append(
+
+                torch.zeros(
+                    (batch_size,
+                     max_seq_len),
+                    requires_grad=if_train).long())
+
     mask = torch.zeros(
         (batch_size,
          max_seq_len),
@@ -353,7 +362,7 @@ def batchify_sequence_labeling_with_label(input_batch_list, gpu, inference, if_t
 
             mask[idx, :seqlen] = torch.Tensor([1] * seqlen)
             for idy in range(feature_num):
-                feature_seq_tensors[idy][idx, :seqlen] = torch.LongTensor(
+                feature_seq_tensors[idy][idx, :seqlen] = torch.FloatTensor(
                     features[idx][:, idy])
 
     else:
@@ -364,7 +373,7 @@ def batchify_sequence_labeling_with_label(input_batch_list, gpu, inference, if_t
 
             mask[idx, :seqlen] = torch.Tensor([1] * seqlen)
             for idy in range(feature_num):
-                feature_seq_tensors[idy][idx, :seqlen] = torch.LongTensor(
+                feature_seq_tensors[idy][idx, :seqlen] = torch.FloatTensor(
                     features[idx][:, idy])
 
     word_seq_lengths, word_perm_idx = word_seq_lengths.sort(0, descending=True)
@@ -696,7 +705,6 @@ def train(data):
                 print(
                     "Task %d Test: time: %.2fs speed: %.2fst/s; acc: %.4f" %
                     (idtask, test_cost, speed, acc))
-
         gc.collect()
 
 
@@ -754,14 +762,14 @@ if __name__ == '__main__':
         data.load(data.dset_dir)
         data.read_config(args.config)
         data.show_data_summary()
-        data.generate_instance('raw')
+        data.generate_instance('test')
 
-        decode_results, pred_scores = load_model_decode(data, 'raw')
+        decode_results, pred_scores = load_model_decode(data, 'test')
 
         if data.nbest:
             data.write_nbest_decoded_results(
-                decode_results, pred_scores, 'raw')
+                decode_results, pred_scores, 'test')
         else:
-            data.write_decoded_results(decode_results, 'raw')
+            data.write_decoded_results(decode_results, 'test')
     else:
         print("Invalid argument! Please use valid arguments! (train/test/finetune/decode)")

@@ -25,8 +25,8 @@ def parse_multitask_label(multitask_label):
 
 def read_instance(input_file, word_alphabet, char_alphabet, feature_alphabets, label_alphabet, number_normalized,
                   max_sent_length, sentence_classification=False, split_token='\t', char_padding_size=-1,
-                  char_padding_symbol='</pad>'):
-    feature_num = len(feature_alphabets)
+                  char_padding_symbol='</pad>', feature_num=1):
+    #feature_num = len(feature_alphabets)
     in_lines = open(input_file, 'r', encoding="utf8").readlines()
     instence_texts = []
     instence_Ids = []
@@ -137,7 +137,10 @@ def read_instance(input_file, word_alphabet, char_alphabet, feature_alphabets, l
                 for idx in range(feature_num):
                     feat_idx = pairs[idx + 1].split(']', 1)[-1]
                     feat_list.append(feat_idx)
-                    feat_Id.append(feature_alphabets[idx].get_index(feat_idx))
+                    if is_number(feat_idx):
+                        feat_Id.append(float(feat_idx))
+                    else:
+                        feat_Id.append(feature_alphabets[idx].get_index(feat_idx))
                 features.append(feat_list)
                 feature_Ids.append(feat_Id)
                 ## get char
@@ -239,6 +242,13 @@ def load_pretrain_emb(embedding_path):
                 first_col = tokens[0]
             embedd_dict[first_col] = embedd
     return embedd_dict, embedd_dim
+
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
 
 
 if __name__ == '__main__':

@@ -54,21 +54,27 @@ def merge_lookup(conll_path, lookup):
 
 def write_to_conllu(dict_with_sent, final_file, all_text):
     final_conllu = open(final_file, "w")
+    conl = open("res.conllu", 'w')
     for index_sentence in dict_with_sent:
         if not all_text == 0:
             line_text = all_text[index_sentence]
             if line_text:
                 for n in line_text:
                     final_conllu.write(n)
+                    conl.write(n)
 
         s = dict_with_sent[index_sentence]
         for index_word in s:
             one_line_word = s[index_word]
             final_conllu.write(one_line_word)
             final_conllu.write("\n")
+            conl.write(one_line_word)
+            conl.write("\n")
 
         final_conllu.write("\n")
+        conl.write("\n")
     final_conllu.close()
+    conl.close()
 
 
 def check_if_any_root(decoded_words):

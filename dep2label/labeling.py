@@ -37,7 +37,7 @@ class Encoding:
             if line.startswith('#'):
                 text.append(line)
             if not line == '\n':
-                details_about_a_word_from_gold = line.split("\t")
+                details_about_a_word_from_gold = line.rstrip().split("\t")
                 if "." in details_about_a_word_from_gold[0] or "-" in details_about_a_word_from_gold[0]:
                     continue
                 elif details_about_a_word_from_gold[0].isdigit():
@@ -52,6 +52,12 @@ class Encoding:
                         words = {1: details_about_a_word_from_gold[1], 2: details_about_a_word_from_gold[2],
                                  3: details_about_a_word_from_gold[3], 4: details_about_a_word_from_gold[6],
                                  5: details_about_a_word_from_gold[7]}
+
+                    if len(details_about_a_word_from_gold) > 9:
+                        i = 6
+                        for ind in range(8, len(details_about_a_word_from_gold)):
+                            words.update({i: details_about_a_word_from_gold[ind]})
+                            i += 1
                     gold_sentence.update({index_of_a_word_in_sentence: words})
 
                     # 1: lemma 2: upos 3: xpos 4: feats 5: deps 6: misc
@@ -66,7 +72,7 @@ class Encoding:
             else:
                 # include a dummy root in the dic
                 words = {1: "ROOT", 2: "ROOT",
-                         3: "ROOT", 4: 0, 5: "root"}
+                         3: "ROOT", 4: 0, 5: "root", 6: 0, 7: 0}
                 gold_sentence.update({0: words})
                 words_with_labels = {}
 
