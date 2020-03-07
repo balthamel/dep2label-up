@@ -1,5 +1,6 @@
 import csv
 
+
 with open("Dundee_DLT_freq_goldtok_newFPD.csv", "r") as csv_file:
     reader = csv.DictReader(csv_file, delimiter='\t')
 
@@ -21,6 +22,7 @@ with open("Dundee_DLT_freq_goldtok_newFPD.csv", "r") as csv_file:
         prev_sent_id = pres_id
         if i >= 5:
             break'''
+
     count = 0
     with open("sample_train.conllu", "w") as f:
         with open("sample_test.conllu", "w") as q:

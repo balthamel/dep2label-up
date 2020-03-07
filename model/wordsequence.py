@@ -34,7 +34,7 @@ class WordSequence(nn.Module):
                 self.input_size += data.HP_char_hidden_dim
         for idx in range(self.feature_num):
             if idx > 0:
-                self.input_size += 1
+                self.input_size += 23
             else:
                 self.input_size += data.feature_emb_dims[idx]
 

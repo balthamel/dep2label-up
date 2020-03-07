@@ -21,6 +21,7 @@ from utils.data import Data
 import os
 import tempfile
 import dep2label.decode_dependencies as decode_dependencies
+from torch.utils.tensorboard import SummaryWriter
 
 try:
     import cPickle as pickle
@@ -336,7 +337,7 @@ def batchify_sequence_labeling_with_label(input_batch_list, gpu, inference, if_t
                 torch.zeros(
                     (batch_size,
                      max_seq_len),
-                    requires_grad=if_train).float())
+                    requires_grad=if_train).long())
         else:
             feature_seq_tensors.append(
 
@@ -507,6 +508,7 @@ def batchify_sentence_classification_with_label(input_batch_list, gpu, if_train=
 
 def train(data):
     print("Training model...")
+    writer = SummaryWriter('runs/exp1')
     data.show_data_summary()
     save_data_name = data.model_dir + ".dset"
     data.save(save_data_name)
@@ -531,6 +533,7 @@ def train(data):
     best_dev = -10
     # data.HP_iteration = 1
     ## start training
+    running_loss = 0.0
     for idx in range(data.HP_iteration):
         epoch_start = time.time()
         temp_start = epoch_start
@@ -571,6 +574,7 @@ def train(data):
             loss, losses, tag_seq = model.calculate_loss(batch_word, batch_features, batch_wordlen, batch_char,
                                                          batch_charlen, batch_charrecover, batch_label, mask,
                                                          inference=False)
+            running_loss += loss.item()
             for idtask in range(data.HP_tasks):
                 right, whole = predict_check(tag_seq[idtask], batch_label[idtask], mask)
                 sample_loss[idtask] += losses[idtask].item()
@@ -598,14 +602,25 @@ def train(data):
                         exit(0)
                     sys.stdout.flush()
                     sample_loss[idtask] = 0
+                    if idtask == 0:
+                        writer.add_scalar('training head accuracy', (right_token[idtask] + 0.) / whole_token[idtask],
+                                          idx * total_batch * batch_size + end)
+                    else:
+                        writer.add_scalar('training deprel accuracy', (right_token[idtask] + 0.) / whole_token[idtask],
+                                          idx * total_batch * batch_size + end)
+
+
 
             if end % 500 == 0:
+                writer.add_scalar('training loss', running_loss / 500, idx * total_batch * batch_size + end)
+                running_loss = 0.0
                 print("--------------------------------------------------------------------------")
 
             total_loss += loss.item()
             loss.backward()
             optimizer.step()
             model.zero_grad()
+
         temp_time = time.time()
         temp_cost = temp_time - temp_start
 
@@ -646,6 +661,10 @@ def train(data):
                 print(
                     "Task %d Dev: time: %.2fs speed: %.2fst/s; acc: %.4f" %
                     (idtask, dev_cost, speed, acc))
+                if idtask == 0:
+                    writer.add_scalar('dev head accuracy', acc, idx)
+                else:
+                    writer.add_scalar('dev deprel accuracy', acc, idx)
         pred_results_tasks = []
         pred_scores_tasks = []
 

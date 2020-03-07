@@ -138,7 +138,7 @@ def read_instance(input_file, word_alphabet, char_alphabet, feature_alphabets, l
                     feat_idx = pairs[idx + 1].split(']', 1)[-1]
                     feat_list.append(feat_idx)
                     if is_number(feat_idx):
-                        feat_Id.append(float(feat_idx))
+                        feat_Id.append(int(feat_idx))
                     else:
                         feat_Id.append(feature_alphabets[idx].get_index(feat_idx))
                 features.append(feat_list)

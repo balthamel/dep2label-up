@@ -61,6 +61,8 @@ class WordRep(nn.Module):
         for idx in range(len(data.feature_alphabets)):
             self.feature_embeddings.append(
                 nn.Embedding(data.feature_alphabets[idx].size(), self.feature_embedding_dims[idx]))
+        self.feature_embeddings.append(nn.Embedding(23, 23))
+        self.feature_embeddings.append(nn.Embedding(23, 23))
         for idx in range(len(data.feature_alphabets)):
             if data.pretrain_feature_embeddings[idx] is not None:
                 self.feature_embeddings[idx].weight.data.copy_(torch.from_numpy(data.pretrain_feature_embeddings[idx]))
@@ -68,10 +70,15 @@ class WordRep(nn.Module):
                 self.feature_embeddings[idx].weight.data.copy_(torch.from_numpy(
                     self.random_embedding(data.feature_alphabets[idx].size(), self.feature_embedding_dims[idx])))
 
+        self.feature_embeddings[1].weight.data.copy_(torch.from_numpy(
+            self.random_embedding(23, 23)))
+        self.feature_embeddings[2].weight.data.copy_(torch.from_numpy(
+            self.random_embedding(23, 23)))
+
         if self.gpu:
             self.drop = self.drop.cuda()
             self.word_embedding = self.word_embedding.cuda()
-            for idx in range(len(data.feature_alphabets)):
+            for idx in range(self.feature_num):
                 self.feature_embeddings[idx] = self.feature_embeddings[idx].cuda()
 
     def random_embedding(self, vocab_size, embedding_dim):
@@ -101,10 +108,11 @@ class WordRep(nn.Module):
         word_list = [word_embs]
         if not self.sentence_classification:
             for idx in range(self.feature_num):
-                if idx > 0:
+                word_list.append(self.feature_embeddings[idx](feature_inputs[idx]))
+                '''if idx > 0:
                     word_list.append(feature_inputs[idx].unsqueeze(2))
                 else:
-                    word_list.append(self.feature_embeddings[idx](feature_inputs[idx]))
+                    word_list.append(self.feature_embeddings[idx](feature_inputs[idx]))'''
 
         if self.use_char:
             ## calculate char lstm last hidden
