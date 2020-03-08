@@ -670,7 +670,7 @@ def train(data):
 
                     data.write_decoded_results(pred_results_tasks, 'dev')
 
-                output_nn = open(data.decode_dir)
+                output_nn = open(data.decode_dir, encoding='utf-8')
                 tmp = tempfile.NamedTemporaryFile().name
                 decode_dependencies.decode(output_nn, tmp)
                 current_score = decode_dependencies.evaluate_dependencies(

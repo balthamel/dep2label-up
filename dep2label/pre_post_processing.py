@@ -53,8 +53,8 @@ def merge_lookup(conll_path, lookup):
 
 
 def write_to_conllu(dict_with_sent, final_file, all_text):
-    final_conllu = open(final_file, "w")
-    conl = open("res.conllu", 'w')
+    final_conllu = open(final_file, "w", encoding='utf-8')
+    conl = open("res.conllu", 'w', encoding='utf-8')
     for index_sentence in dict_with_sent:
         if not all_text == 0:
             line_text = all_text[index_sentence]
