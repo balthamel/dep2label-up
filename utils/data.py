@@ -199,10 +199,10 @@ class Data:
     def initial_feature_alphabets(self):
         if self.sentence_classification:
             ## if sentence classification data format, splited by '\t'
-            items = open(self.train_dir, 'r').readline().strip('\n').split('\t')
+            items = open(self.train_dir, 'r', encoding='utf-8').readline().strip('\n').split('\t')
         else:
             ## if sequence labeling data format i.e. CoNLL 2003, split by ' '
-            items = open(self.train_dir, 'r').readline().strip('\n').split()
+            items = open(self.train_dir, 'r', encoding='utf-8').readline().strip('\n').split()
         total_column = len(items)
         if total_column > 2:
             for idx in range(1, total_column - 1):
@@ -230,7 +230,7 @@ class Data:
 
     def build_alphabet(self, input_file):
 
-        in_lines = open(input_file, 'r').readlines()
+        in_lines = open(input_file, 'r', encoding='utf-8').readlines()
         for line in in_lines:
             if len(line) > 2:
                 ## if sentence classification data format, splited by \t
@@ -363,7 +363,7 @@ class Data:
 
     def write_decoded_results(self, predict_results, name):
 
-        fout = open(self.decode_dir, 'w')
+        fout = open(self.decode_dir, 'w', encoding='utf-8')
         content_list = []
         if name == 'raw':
             content_list = self.raw_texts
@@ -618,7 +618,7 @@ class Data:
 
 def config_file_to_dict(input_file):
     config = {}
-    fins = open(input_file, 'r').readlines()
+    fins = open(input_file, 'r', encoding='utf-8').readlines()
     for line in fins:
         if len(line) > 0 and line[0] == "#":
             continue
