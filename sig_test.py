@@ -31,4 +31,6 @@ for idx in range(len(true_parse)):
 
 print(base_cor_parse_incor + base_incor_parse_cor + base_parse_incor + base_parse_cor)
 print(count)
+print("base and true parser correct %d base correct true parser incorrect: %d, base incorrect true parser correct: %d; base and true parser incorrect: %d" %
+                    (base_parse_cor, base_cor_parse_incor, base_incor_parse_cor, base_parse_incor))
 
