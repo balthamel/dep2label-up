@@ -760,7 +760,7 @@ if __name__ == '__main__':
     elif status == 'decode':
         print("MODEL: decode")
         data.load(data.dset_dir)
-        data.read_config(args.config)
+        data.read_config_decode(args.config)
         data.show_data_summary()
         data.generate_instance('test')
 
@@ -771,5 +771,11 @@ if __name__ == '__main__':
                 decode_results, pred_scores, 'test')
         else:
             data.write_decoded_results(decode_results, 'test')
+        output_nn = open(data.decode_dir, encoding='utf-8')
+        tmp = data.result_dir
+        decode_dependencies.decode(output_nn, tmp)
+        current_score = decode_dependencies.evaluate_dependencies(
+            data.gold_dev_dep, tmp)
+        print("Current Score (from LAS)", current_score)
     else:
         print("Invalid argument! Please use valid arguments! (train/test/finetune/decode)")

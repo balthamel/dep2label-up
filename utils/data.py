@@ -50,6 +50,7 @@ class Data:
         self.dset_dir = None  ## data vocabulary related file
         self.model_dir = None  ## model save  file
         self.load_model_dir = None  ## model load file
+        self.result_dir = None  ## result conllu file directory
 
         self.word_emb_dir = None
         self.char_emb_dir = None
@@ -150,6 +151,7 @@ class Data:
         print("     Model  file directory: %s" % (self.model_dir))
         print("     Loadmodel   directory: %s" % (self.load_model_dir))
         print("     Decode file directory: %s" % (self.decode_dir))
+        print("     Result file directory: %s" % (self.result_dir))
         print("     Train instance number: %s" % (len(self.train_texts)))
         print("     Dev   instance number: %s" % (len(self.dev_texts)))
         print("     Test  instance number: %s" % (len(self.test_texts)))
@@ -448,6 +450,40 @@ class Data:
             fout.write('\n')
         fout.close()
 
+    def read_config_decode(self, config_file):
+        config = config_file_to_dict(config_file)
+        ## read data:
+        the_item = 'test_dir'
+        if the_item in config:
+            self.test_dir = config[the_item]
+        the_item = 'raw_dir'
+        if the_item in config:
+            self.raw_dir = config[the_item]
+        the_item = 'decode_dir'
+        if the_item in config:
+            self.decode_dir = config[the_item]
+        the_item = 'result_dir'
+        if the_item in config:
+            self.result_dir = config[the_item]
+        the_item = 'dset_dir'
+        if the_item in config:
+            self.dset_dir = config[the_item]
+        the_item = 'model_dir'
+        if the_item in config:
+            self.model_dir = config[the_item]
+        the_item = 'load_model_dir'
+        if the_item in config:
+            self.load_model_dir = config[the_item]
+        the_item = 'nbest'
+        if the_item in config:
+            self.nbest = int(config[the_item])
+        the_item = 'status'
+        if the_item in config:
+            self.status = config[the_item]
+        the_item = "gold_dev_dep"
+        if the_item in config:
+            self.gold_dev_dep = config[the_item]
+
     def read_config(self, config_file):
         config = config_file_to_dict(config_file)
         ## read data:
@@ -466,6 +502,9 @@ class Data:
         the_item = 'decode_dir'
         if the_item in config:
             self.decode_dir = config[the_item]
+        the_item = 'result_dir'
+        if the_item in config:
+            self.result_dir = config[the_item]
         the_item = 'dset_dir'
         if the_item in config:
             self.dset_dir = config[the_item]
