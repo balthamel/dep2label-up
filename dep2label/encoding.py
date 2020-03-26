@@ -82,7 +82,12 @@ def encode_3(gold_sentence, task):
                         "+" + repr(relative_position_head) + "{}" + info_of_a_word[5] + "{}" + postag_head)
                 full_label = str(
                     info_of_a_word[1] + "\t" + info_of_a_word[3] + "\t" + info_of_a_word[6]
-                    + "\t" + info_of_a_word[7] + "\t" + label)
+                    + "\t" + info_of_a_word[7] + "\t" + info_of_a_word[8] + "\t" + info_of_a_word[9] + "\t"
+                    + info_of_a_word[10] + "\t" + info_of_a_word[11] + "\t" + info_of_a_word[12] + "\t"
+                    + info_of_a_word[13] + "\t" + info_of_a_word[14] + "\t" + info_of_a_word[15] + "\t"
+                    + info_of_a_word[16] + "\t" + info_of_a_word[17] + "\t" + info_of_a_word[18] + "\t"
+                    + info_of_a_word[19] + "\t" + info_of_a_word[20] + "\t" + info_of_a_word[21] + "\t"
+                    + info_of_a_word[22] + "\t" + label)
 
                 words_with_labels.update({index_of_word: full_label})
 
@@ -107,7 +112,12 @@ def encode_3(gold_sentence, task):
                         "-" + repr(relative_position_head) + "{}" + info_of_a_word[5] + "{}" + postag_head)
                 full_label = str(
                     info_of_a_word[1] + "\t" + info_of_a_word[3] + "\t" + info_of_a_word[6]
-                    + "\t" + info_of_a_word[7] + "\t" + label)
+                    + "\t" + info_of_a_word[7] + "\t" + info_of_a_word[8] + "\t" + info_of_a_word[9] + "\t"
+                    + info_of_a_word[10] + "\t" + info_of_a_word[11] + "\t" + info_of_a_word[12] + "\t"
+                    + info_of_a_word[13] + "\t" + info_of_a_word[14] + "\t" + info_of_a_word[15] + "\t"
+                    + info_of_a_word[16] + "\t" + info_of_a_word[17] + "\t" + info_of_a_word[18] + "\t"
+                    + info_of_a_word[19] + "\t" + info_of_a_word[20] + "\t" + info_of_a_word[21] + "\t"
+                    + info_of_a_word[22] + "\t" + label)
 
                 words_with_labels.update({index_of_word: full_label})
 
@@ -243,7 +253,10 @@ def tag_BOS(task, words_with_labels):
     else:
         label = str(
             bos + "{}" + bos + "{}" + bos)
-    full_label = str(bos + "\t" + bos + "\t" + neg + "\t" + neg + "\t" + label)
+    full_label = str(bos + "\t" + bos + "\t" + neg + "\t" + neg + "\t" + neg + "\t"
+                     + neg + "\t" + neg + "\t" + neg + "\t" + neg + "\t" + neg + "\t"
+                     + neg + "\t" + neg + "\t" + neg + "\t" + neg + "\t" + neg + "\t"
+                     + neg + "\t" + neg + "\t" + neg + "\t" + neg + "\t" + label)
     words_with_labels.update({0: full_label})
 
 
@@ -259,5 +272,8 @@ def tag_EOS(task, words_with_labels):
         label = str(
             eos + "{}" + eos + "{}" + eos)
 
-    full_label = str(eos + "\t" + eos + "\t" + neg + "\t" + neg + "\t" + label)
+    full_label = str(eos + "\t" + eos + "\t" + neg + "\t" + neg + "\t" + neg + "\t"
+                     + neg + "\t" + neg + "\t" + neg + "\t" + neg + "\t" + neg + "\t"
+                     + neg + "\t" + neg + "\t" + neg + "\t" + neg + "\t" + neg + "\t"
+                     + neg + "\t" + neg + "\t" + neg + "\t" + neg + "\t" + label)
     words_with_labels.update({len(words_with_labels) + 1: full_label})

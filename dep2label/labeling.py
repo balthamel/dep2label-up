@@ -64,15 +64,21 @@ class Encoding:
                     all_columns = {1: details_about_a_word_from_gold[2],
                                    2: details_about_a_word_from_gold[3], 3: details_about_a_word_from_gold[4],
                                    4: details_about_a_word_from_gold[5],
-                                   5: details_about_a_word_from_gold[8],
-                                   6: details_about_a_word_from_gold[9]}
+                                   5: details_about_a_word_from_gold[6],
+                                   6: details_about_a_word_from_gold[7]}
+                    if len(details_about_a_word_from_gold) > 9:
+                        i = 7
+                        for ind in range(8, len(details_about_a_word_from_gold)):
+                            all_columns.update({i: details_about_a_word_from_gold[ind]})
+                            i += 1
                     all_info_words.update({index_of_a_word_in_sentence: all_columns})
                     all_info_sentences.update({self.index_of_sentence: all_info_words})
 
             else:
                 # include a dummy root in the dic
                 words = {1: "ROOT", 2: "ROOT",
-                         3: "ROOT", 4: 0, 5: "root", 6: 0, 7: 0}
+                         3: "ROOT", 4: 0, 5: "root", 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0,
+                         14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0}
                 gold_sentence.update({0: words})
                 words_with_labels = {}
 

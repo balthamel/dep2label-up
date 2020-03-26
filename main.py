@@ -529,6 +529,7 @@ def train(data):
         print("Optimizer illegal: %s" % (data.optimizer))
         exit(1)
     best_dev = -10
+    best_dev_uas = -10
     # data.HP_iteration = 1
     ## start training
     for idx in range(data.HP_iteration):
@@ -673,21 +674,30 @@ def train(data):
                 output_nn = open(data.decode_dir, encoding='utf-8')
                 tmp = tempfile.NamedTemporaryFile().name
                 decode_dependencies.decode(output_nn, tmp)
-                current_score = decode_dependencies.evaluate_dependencies(
+                current_score, current_uas = decode_dependencies.evaluate_dependencies(
                     data.gold_dev_dep, tmp)
                 print("Current Score (from LAS)", current_score)
+                print("Current Score (from UAS)", current_uas)
 
         if current_score > best_dev:
             if data.seg:
                 print("Exceed previous best f score:", best_dev)
             else:
-                print("Exceed previous best acc score:", best_dev)
+                print("Exceed previous best acc score (from LAS):", best_dev)
             model_name = data.model_dir + ".model"
             # print ("Overwritting model to", model_name)
             torch.save(model.state_dict(), model_name)
             best_dev = current_score
         else:
             print("sofar the best " + repr(best_dev))
+        if current_uas > best_dev_uas:
+            if data.seg:
+                print("Exceed previous best f score:", best_dev_uas)
+            else:
+                print("Exceed previous best acc score (from UAS):", best_dev_uas)
+            best_dev_uas = current_uas
+        else:
+            print("sofar the best " + repr(best_dev_uas))
         summary = evaluate(data, model, "test", False)
 
         test_finish = time.time()
@@ -774,8 +784,9 @@ if __name__ == '__main__':
         output_nn = open(data.decode_dir, encoding='utf-8')
         tmp = data.result_dir
         decode_dependencies.decode(output_nn, tmp)
-        current_score = decode_dependencies.evaluate_dependencies(
+        current_score, current_uas = decode_dependencies.evaluate_dependencies(
             data.gold_dev_dep, tmp)
         print("Current Score (from LAS)", current_score)
+        print("Current Score (from UAS)", current_uas)
     else:
         print("Invalid argument! Please use valid arguments! (train/test/finetune/decode)")

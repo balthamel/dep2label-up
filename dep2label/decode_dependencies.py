@@ -132,4 +132,4 @@ def evaluate_dependencies(gold, path_output):
     uas = float(lines[1].split()[9])
     print("UAS: " + repr(uas) + " LAS: " + repr(las))
 
-    return las
+    return las, uas
