@@ -33,10 +33,11 @@ class WordSequence(nn.Module):
             if data.char_feature_extractor == "ALL":
                 self.input_size += data.HP_char_hidden_dim
         for idx in range(self.feature_num):
-            if idx > 0:
+            self.input_size += 1
+            '''if idx > 0:
                 self.input_size += 1
             else:
-                self.input_size += data.feature_emb_dims[idx]
+                self.input_size += data.feature_emb_dims[idx]'''
 
         # The LSTM takes word embeddings as inputs, and outputs hidden states
         # with dimensionality hidden_dim.

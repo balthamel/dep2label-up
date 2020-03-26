@@ -207,7 +207,7 @@ class Data:
             items = open(self.train_dir, 'r', encoding='utf-8').readline().strip('\n').split()
         total_column = len(items)
         if total_column > 2:
-            for idx in range(1, total_column - 1):
+            for idx in range(2, total_column - 1):
                 feature_prefix = items[idx].split(']', 1)[0] + "]"
                 if not is_number(items[idx]):
                     self.feature_alphabets.append(Alphabet(feature_prefix))

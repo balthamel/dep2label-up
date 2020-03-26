@@ -135,7 +135,7 @@ def read_instance(input_file, word_alphabet, char_alphabet, feature_alphabets, l
                 feat_list = []
                 feat_Id = []
                 for idx in range(feature_num):
-                    feat_idx = pairs[idx + 1].split(']', 1)[-1]
+                    feat_idx = pairs[idx + 2].split(']', 1)[-1]
                     feat_list.append(feat_idx)
                     if is_number(feat_idx):
                         feat_Id.append(float(feat_idx))

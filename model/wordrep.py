@@ -101,10 +101,11 @@ class WordRep(nn.Module):
         word_list = [word_embs]
         if not self.sentence_classification:
             for idx in range(self.feature_num):
-                if idx > 0:
+                word_list.append(feature_inputs[idx].unsqueeze(2))
+                '''if idx > 0:
                     word_list.append(feature_inputs[idx].unsqueeze(2))
                 else:
-                    word_list.append(self.feature_embeddings[idx](feature_inputs[idx]))
+                    word_list.append(self.feature_embeddings[idx](feature_inputs[idx]))'''
 
         if self.use_char:
             ## calculate char lstm last hidden

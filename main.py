@@ -330,7 +330,13 @@ def batchify_sequence_labeling_with_label(input_batch_list, gpu, inference, if_t
 
     feature_seq_tensors = []
     for idx in range(feature_num):
-        if idx > 0:
+        feature_seq_tensors.append(
+
+            torch.zeros(
+                (batch_size,
+                 max_seq_len),
+                requires_grad=if_train).float())
+        '''if idx > 0:
             feature_seq_tensors.append(
 
                 torch.zeros(
@@ -343,7 +349,7 @@ def batchify_sequence_labeling_with_label(input_batch_list, gpu, inference, if_t
                 torch.zeros(
                     (batch_size,
                      max_seq_len),
-                    requires_grad=if_train).long())
+                    requires_grad=if_train).long())'''
 
     mask = torch.zeros(
         (batch_size,
