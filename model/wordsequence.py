@@ -24,7 +24,7 @@ class WordSequence(nn.Module):
         self.bilstm_flag = data.HP_bilstm
         self.lstm_layer = data.HP_lstm_layer
         self.wordrep = WordRep(data)
-        self.input_size = data.word_emb_dim
+        self.input_size = 0
         self.status = data.status
         self.index_of_main_tasks = data.index_of_main_tasks
         self.feature_num = data.feature_num

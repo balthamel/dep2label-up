@@ -46,14 +46,14 @@ class WordRep(nn.Module):
                 print(
                     "Error char feature selection, please check parameter data.char_feature_extractor (CNN/LSTM/GRU/ALL).")
                 exit(0)
-        self.embedding_dim = data.word_emb_dim
+        #self.embedding_dim = data.word_emb_dim
         self.drop = nn.Dropout(data.HP_dropout)
-        self.word_embedding = nn.Embedding(data.word_alphabet.size(), self.embedding_dim)
+        '''self.word_embedding = nn.Embedding(data.word_alphabet.size(), self.embedding_dim)
         if data.pretrain_word_embedding is not None:
             self.word_embedding.weight.data.copy_(torch.from_numpy(data.pretrain_word_embedding))
         else:
             self.word_embedding.weight.data.copy_(
-                torch.from_numpy(self.random_embedding(data.word_alphabet.size(), self.embedding_dim)))
+                torch.from_numpy(self.random_embedding(data.word_alphabet.size(), self.embedding_dim)))'''
 
         self.feature_num = data.feature_num
         self.feature_embedding_dims = data.feature_emb_dims
@@ -70,7 +70,7 @@ class WordRep(nn.Module):
 
         if self.gpu:
             self.drop = self.drop.cuda()
-            self.word_embedding = self.word_embedding.cuda()
+            #self.word_embedding = self.word_embedding.cuda()
             for idx in range(len(data.feature_alphabets)):
                 self.feature_embeddings[idx] = self.feature_embeddings[idx].cuda()
 
@@ -96,9 +96,10 @@ class WordRep(nn.Module):
         batch_size = word_inputs.size(0)
         sent_len = word_inputs.size(1)
 
-        word_embs = self.word_embedding(word_inputs)
+        #word_embs = self.word_embedding(word_inputs)
 
-        word_list = [word_embs]
+        #word_list = [word_embs]
+        word_list = []
         if not self.sentence_classification:
             for idx in range(self.feature_num):
                 if idx > 0:
@@ -115,7 +116,7 @@ class WordRep(nn.Module):
             char_features = char_features.view(batch_size, sent_len, -1)
             ## concat word and char together
             word_list.append(char_features)
-            word_embs = torch.cat([word_embs, char_features], 2)
+            #word_embs = torch.cat([word_embs, char_features], 2)
             if self.char_all_feature:
                 char_features_extra = self.char_feature_extra.get_last_hiddens(char_inputs,
                                                                                char_seq_lengths.cpu().numpy())
