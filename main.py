@@ -348,7 +348,7 @@ def batchify_sequence_labeling_with_label(input_batch_list, gpu, inference, if_t
     mask = torch.zeros(
         (batch_size,
          max_seq_len),
-        requires_grad=if_train).byte()
+        requires_grad=if_train).bool()
 
     if not inference:
         for idx, (seq, label, seqlen) in enumerate(
