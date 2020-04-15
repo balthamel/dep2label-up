@@ -689,7 +689,7 @@ def train(data):
             torch.save(model.state_dict(), model_name)
             best_dev = current_score
         else:
-            print("sofar the best " + repr(best_dev))
+            print("sofar the best (from LAS)" + repr(best_dev))
         if current_uas > best_dev_uas:
             if data.seg:
                 print("Exceed previous best f score:", best_dev_uas)
@@ -697,7 +697,7 @@ def train(data):
                 print("Exceed previous best acc score (from UAS):", best_dev_uas)
             best_dev_uas = current_uas
         else:
-            print("sofar the best " + repr(best_dev_uas))
+            print("sofar the best (from UAS)" + repr(best_dev_uas))
         summary = evaluate(data, model, "test", False)
 
         test_finish = time.time()
