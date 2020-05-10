@@ -1,7 +1,7 @@
 
-true_parse = open("sample_test.conllu", encoding='utf-8').readlines()
-base_parse = open("res.conllu", encoding='utf-8').readlines()
-parse = open("myModel/result.conllu", encoding='utf-8').readlines()
+true_parse = open("/storage/plzen1/home/agrawala/dep2label-up/treebank/simple_avg_17_test.conllu", encoding='utf-8').readlines()
+base_parse = open("sample_baseline/result_without_word_feats_simple_avg.conllu", encoding='utf-8').readlines()
+parse = open("max_norm_17/result_without_word_feats_simple_avg_raw_mod.conllu", encoding='utf-8').readlines()
 
 base_parse_cor = 0
 base_parse_incor = 0
