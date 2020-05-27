@@ -19,25 +19,14 @@ task=... # single or multitask learning of labels [single, combined, multi] *com
 enc=...   # type of encoding [2,3,4]
 ```
 
-#### Train a model
+#### Training a model and parsing with a pre-trained model
 
  ```bash
 python main.py --config x 
 ```
 
 * ```--train-config``` an example of a [config file for training](https://github.com/balthamel/dep2label-up/blob/master/config/train.config)
-#### Parse with a pre-trained model
+* For training, make sure to set status=train in the config file.
+* For parsing with a pre-trained model, set status=decode and make sure you set the dset_dir, load_model_dir, decode_dir and result_dir variables with the correct data, saved model, decode and final result directories respectively in the config file.
 
- ```bash
-python decode.py --test x --gold x --model x/mod --status decode --gpu True --output x --ncrfpp x
-```
-where:
-
-```Python
-test=...  # file with encoded dependency trees as labels
-gold=...    # file with depedencies in the CONLL format
-model=... # path to the model directory ending with /mod
-output=...   # output file with predicted dependencies in CONLL format
-ncrfpp=... # path to the NCRF++ directory
-```
 
